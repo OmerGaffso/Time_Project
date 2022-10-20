@@ -1,3 +1,9 @@
+/*
+    Author: Omer Penso
+    ID:     316176072
+    Date:   20/10/2022
+*/
+
 #include "time.hpp"
 
 void test_time()

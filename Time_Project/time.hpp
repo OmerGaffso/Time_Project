@@ -15,7 +15,7 @@ class Time {
     static constexpr std::size_t HOURS_INDEX = 0;           // Index of hours in time array
     static constexpr std::size_t MINUTES_INDEX = 1;         // Index of minutes in time array
     static constexpr std::size_t SECONDS_INDEX = 2;         // Index of seconds in time array
-    static constexpr int UPPER_LIMIT = 60;                  // Max value for time input (minutes and seconds)
+    static constexpr int UPPER_LIMIT = 60;                  // Max value for time minutes and seconds
     static constexpr int LOWER_LIMIT = 0;                   // Min value for Time obj input (all fields)
 
 private:
