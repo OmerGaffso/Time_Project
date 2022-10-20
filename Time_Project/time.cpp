@@ -1,4 +1,5 @@
 #include <iomanip> 
+#include <ostream>
 
 #include "time.hpp"
 
@@ -25,22 +26,121 @@ Time::Time(const Time& o)
     std::cout << "Copy CTOR\n";
 }
 
-//// move CTOR:
-//Time::Time(Time&& o)
-//    : mTime{ o.mTime }
-//{
-//    std::cout << "Move CTOR\n";
-//    o.mTime = nullptr;
-//}
+// this + int
+Time Time::operator+(int right)
+{
+    std::cout << "Time + int\n";
+    if (right < 0) {
+        std::cout << "Error: Cannot add negative number to time.\n";
+        exit(EXIT_FAILURE);
+    }
+
+    return Time{  this->hours()
+                , this->minutes()
+                , this->seconds() + right
+    };
+}
+
+// int + Time obj
+Time operator+(int left, Time const& right)
+{
+    if (left < 0) {
+        std::cout << "Error: Cannot add negative number to time.\n";
+        exit(EXIT_FAILURE);
+    }
+    std::cout << "int + Time\n";
+    return Time{  right.hours()
+                , right.minutes()
+                , right.seconds() + left
+    };
+}
+
+// this + Time obj
+Time Time::operator+(const Time& right) 
+{
+    std::cout << "Time + Time\n";
+    return Time{ this->hours() + right.hours()
+               , this->minutes() + right.minutes()
+               , this->seconds() + right.seconds()
+    };
+}
+
+// this += timeObj;
+Time Time::operator+=(const Time & right)
+{
+    int secondsOverflow{}, minutesOverflow{};
+
+    mTime[SECONDS_INDEX] += right.seconds();
+    secondsOverflow = mTime[SECONDS_INDEX] / UPPER_LIMIT;
+    mTime[SECONDS_INDEX] %= UPPER_LIMIT;
+
+    mTime[MINUTES_INDEX] += right.minutes() + secondsOverflow;
+    minutesOverflow = mTime[MINUTES_INDEX] / UPPER_LIMIT;
+    mTime[MINUTES_INDEX] %= UPPER_LIMIT;
+
+    mTime[HOURS_INDEX] += right.hours() + minutesOverflow;
+    
+    return *this;
+}
+
+// this == Time obj ?
+bool Time::operator==(const Time& o) const 
+{
+    return this->hours() == o.hours()
+        && this->minutes() == o.minutes()
+        && this->seconds() == o.seconds();
+}
+
+// this != Time ?
+bool Time::operator!=(const Time& o) const
+{
+    return !(*this == o);
+}
+
+// this < Time ?
+bool Time::operator<(const Time& o) const
+{
+    if (*this == o)
+        return false;
+    if (this->hours() > o.hours())
+        return false;
+    if (this->minutes() > o.minutes())
+        return false;
+    if (this->seconds() > o.seconds())
+        return false;
+    return true;
+}
+
+// this > Time ?
+bool Time::operator>(const Time& o) const
+{
+    return (*this != o && !(*this < o));
+}
+
+
+// this <= Time ?
+bool Time::operator<=(const Time& o) const
+{
+    return *this < o || *this == o;
+}
+
+// this >= Time ?
+bool Time::operator>=(const Time& o) const
+{
+    return *this > o || *this == o;
+}
+
+
 
 // assign CTOR:
 Time &Time::operator=(Time const& o)          
 {
     std::cout << "= Operator\n";
-    delete[] mTime;
-
-
-    mTime = new int[TIME_ARRAY_ELEMENTS] {o.hours(), o.minutes(), o.seconds()};
+    if (this != &o)             // if they are the same, do nothing.
+    {
+        delete[] mTime;
+        mTime = new int[TIME_ARRAY_ELEMENTS] {o.hours(), o.minutes(), o.seconds()};
+    }
     return *this;
 }
 
@@ -52,13 +152,12 @@ Time::~Time()
     mTime = nullptr;
 }
 
-// functions:
-void Time::show_time()
+// ostream << Point
+std::ostream& operator<<(std::ostream& out, Time const& time)
 {
-    std::cout << std::setfill('0');
+    out << std::setfill('0');
 
-    std::cout << std::setw(2) << mTime[HOURS_INDEX]
-        << ":" << std::setw(2) << mTime[MINUTES_INDEX]
-        << ":" << std::setw(2) << mTime[SECONDS_INDEX]
-        << std::endl;
+    return out << std::setw(2) << time.hours()
+        << ":" << std::setw(2) << time.minutes() 
+        << ":" << std::setw(2) << time.seconds() ;
 }

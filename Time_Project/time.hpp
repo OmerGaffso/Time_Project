@@ -21,6 +21,36 @@ public:
 
     //Time(Time&& o);
 
+    // this + int
+    Time operator+(int right);
+
+    // int + Time obj
+    friend Time operator+(int left, Time const& right);
+
+    // this + Time obj
+    Time operator+(const Time& right);
+    
+    // this += timeObj;
+    Time operator+=(const Time& right);
+
+    // this == Time ?
+    bool operator==(const Time& o) const;
+
+    // this != Time ?
+    bool operator!=(const Time& o) const;
+
+    // this <= Time ?
+    bool operator<=(const Time& o) const;
+
+    // this >= Time ?
+    bool operator>=(const Time& o) const;
+
+    // this < Time ?
+    bool operator<(const Time& o) const;
+
+    // this > Time ?
+    bool operator>(const Time& o) const;
+
     Time &operator=(Time const& o);          // rule of 3: assign
 
     ~Time();                                // rule of 3: deletes
@@ -35,9 +65,15 @@ public:
     int seconds() const { return mTime[SECONDS_INDEX]; }
     void seconds(int minutes) { mTime[SECONDS_INDEX] = minutes; }
 
-    // functions:
-    void show_time();
+    /*
+        ostream << Point
+        simple print when sending the Time obj to std::out.
+        prints the Time in the following format:
+                XX:XX:XX
+    */ 
+    friend std::ostream& operator<<(std::ostream& out, Time const& time);
 
+    
 };
 
 
