@@ -1,58 +1,45 @@
 #pragma once
 #include <iostream>
-#include <iomanip> //setfill setw
-#include "helper.hpp"
-
-#define TIME_ARRAY_ELEMENTS 3
-#define HOURS_INDEX 0
-#define MINUTES_INDEX 1
-#define SECONDS_INDEX 2
-#define MIN_TIME_INPUT 0
-#define MAX_SECONDS_MINUTES 59
 
 class Time {
+
+    static constexpr std::size_t TIME_ARRAY_ELEMENTS = 3;   // Size of time array
+    static constexpr std::size_t HOURS_INDEX = 0;           // Index of hours in time array
+    static constexpr std::size_t MINUTES_INDEX = 1;         // Index of minutes in time array
+    static constexpr std::size_t SECONDS_INDEX = 2;         // Index of seconds in time array
+    static constexpr std::size_t LOWER_LIMIT = 0;           // Min value for time input (all fields)
+    static constexpr std::size_t UPPER_LIMIT = 60;          // Max value for time input (minutes and seconds)
+
 private:
     int* mTime;
 
 public:
     // CTOR & DTOR
-    Time(int h, int m, int s)
-        : mTime{ new int[TIME_ARRAY_ELEMENTS] {h,  m, s} }
-    {
-        myAssert(h < MIN_TIME_INPUT, "Error: Hours must be grater than or equal to 0.");
-        myAssert(m < MIN_TIME_INPUT&& m > MAX_SECONDS_MINUTES, "Error: Minutes must be in range 0-59.");
-        myAssert(s < MIN_TIME_INPUT&& s > MAX_SECONDS_MINUTES, "Error: Seconds must be in range 0-59.");
-    }
+    Time(int h = 0, int m = 0, int s = 0);  // default values set to 0
 
-    Time(const Time& o)
-        : mTime{ new int[TIME_ARRAY_ELEMENTS] {o.hours(), o.minutes(), o.seconds()} }
-    { }
+    Time(const Time& o);                    // Rule of 3: copy
 
-    ~Time()
-    {
-        delete[] mTime;
-        mTime = nullptr;
-    }
+    //Time(Time&& o);
+
+    Time &operator=(Time const& o);          // rule of 3: assign
+
+    ~Time();                                // rule of 3: deletes
 
     // getters & setters:
     int hours() const { return mTime[HOURS_INDEX]; }
-    void set_hours(int hours) { mTime[HOURS_INDEX] = hours; }
+    void hours(int hours) { mTime[HOURS_INDEX] = hours; }
 
     int minutes() const { return mTime[MINUTES_INDEX]; }
-    void set_minutes(int minutes) { mTime[MINUTES_INDEX] = minutes; }
+    void minutes(int minutes) { mTime[MINUTES_INDEX] = minutes; }
 
     int seconds() const { return mTime[SECONDS_INDEX]; }
-    void set_seconds(int minutes) { mTime[SECONDS_INDEX] = minutes; }
+    void seconds(int minutes) { mTime[SECONDS_INDEX] = minutes; }
 
     // functions:
-    void show_time()
-    {
-        std::cout << std::setfill('0');
+    void show_time();
 
-        std::cout << std::setw(2) << mTime[HOURS_INDEX] << ":"
-            << mTime[MINUTES_INDEX] << ":"
-            << mTime[SECONDS_INDEX] << "\n";
-    }
 };
+
+
 
 
