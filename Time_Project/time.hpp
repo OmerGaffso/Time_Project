@@ -1,14 +1,22 @@
 #pragma once
 #include <iostream>
 
+/*
+    This class represent time. 
+    The time is being held in an int array, in which index 0 is the hours, index 1 is minutes and index 2 is seconds.
+    Seconds and minutes is allways in range 0-59, and if there is an overflow, converted to the next field
+    (seconds to minutes, minutes to hours.
+    Hours can be unlimited.
+*/
+
 class Time {
 
     static constexpr std::size_t TIME_ARRAY_ELEMENTS = 3;   // Size of time array
     static constexpr std::size_t HOURS_INDEX = 0;           // Index of hours in time array
     static constexpr std::size_t MINUTES_INDEX = 1;         // Index of minutes in time array
     static constexpr std::size_t SECONDS_INDEX = 2;         // Index of seconds in time array
-    static constexpr std::size_t LOWER_LIMIT = 0;           // Min value for time input (all fields)
-    static constexpr std::size_t UPPER_LIMIT = 60;          // Max value for time input (minutes and seconds)
+    static constexpr int UPPER_LIMIT = 60;                  // Max value for time input (minutes and seconds)
+    static constexpr int LOWER_LIMIT = 0;                   // Min value for Time obj input (all fields)
 
 private:
     int* mTime;
@@ -18,8 +26,6 @@ public:
     Time(int h = 0, int m = 0, int s = 0);  // default values set to 0
 
     Time(const Time& o);                    // Rule of 3: copy
-
-    //Time(Time&& o);
 
     // this + int
     Time operator+(int right);
@@ -51,7 +57,7 @@ public:
     // this > Time ?
     bool operator>(const Time& o) const;
 
-    Time &operator=(Time const& o);          // rule of 3: assign
+    Time &operator=(Time const& o);         // rule of 3: assign
 
     ~Time();                                // rule of 3: deletes
 
@@ -71,9 +77,7 @@ public:
         prints the Time in the following format:
                 XX:XX:XX
     */ 
-    friend std::ostream& operator<<(std::ostream& out, Time const& time);
-
-    
+    friend std::ostream& operator<<(std::ostream& out, Time const& time); 
 };
 
 

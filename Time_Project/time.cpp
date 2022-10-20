@@ -6,15 +6,15 @@
 // CTOR:
 Time::Time(int h, int m, int s)
 {
-    std::cout << "Regular CTOR\n";
+
     if (h < LOWER_LIMIT || m < LOWER_LIMIT || s < LOWER_LIMIT) {
         std::cout << "Error: Time must be positive integer.\n";
         exit(EXIT_FAILURE);
     }
     m += s / UPPER_LIMIT;   // Add 1 minute for every 60 seconds.
-    s = s % 60;             // Seconds in range of 0-59.
+    s = s % UPPER_LIMIT;             // Seconds in range of 0-59.
     h += m / UPPER_LIMIT;   // Add 1 hour for every 60 minutes.
-    m = m % 60;             // Minutes in range of 0-59.
+    m = m % UPPER_LIMIT;             // Minutes in range of 0-59.
     
     mTime = new int[TIME_ARRAY_ELEMENTS] {h, m, s};
 }
@@ -22,14 +22,11 @@ Time::Time(int h, int m, int s)
 // Copy CTOR:
 Time::Time(const Time& o)
     : mTime{ new int[TIME_ARRAY_ELEMENTS] {o.hours(), o.minutes(), o.seconds()} }
-{
-    std::cout << "Copy CTOR\n";
-}
+{ }
 
 // this + int
 Time Time::operator+(int right)
 {
-    std::cout << "Time + int\n";
     if (right < 0) {
         std::cout << "Error: Cannot add negative number to time.\n";
         exit(EXIT_FAILURE);
@@ -48,7 +45,6 @@ Time operator+(int left, Time const& right)
         std::cout << "Error: Cannot add negative number to time.\n";
         exit(EXIT_FAILURE);
     }
-    std::cout << "int + Time\n";
     return Time{  right.hours()
                 , right.minutes()
                 , right.seconds() + left
@@ -58,7 +54,6 @@ Time operator+(int left, Time const& right)
 // this + Time obj
 Time Time::operator+(const Time& right) 
 {
-    std::cout << "Time + Time\n";
     return Time{ this->hours() + right.hours()
                , this->minutes() + right.minutes()
                , this->seconds() + right.seconds()
@@ -130,12 +125,9 @@ bool Time::operator>=(const Time& o) const
     return *this > o || *this == o;
 }
 
-
-
 // assign CTOR:
 Time &Time::operator=(Time const& o)          
 {
-    std::cout << "= Operator\n";
     if (this != &o)             // if they are the same, do nothing.
     {
         delete[] mTime;
@@ -147,7 +139,6 @@ Time &Time::operator=(Time const& o)
 // DTOR:
 Time::~Time()
 {
-    std::cout << "DTOR\n";
     delete[] mTime;
     mTime = nullptr;
 }
